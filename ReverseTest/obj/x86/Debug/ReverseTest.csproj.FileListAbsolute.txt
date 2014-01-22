@@ -1,0 +1,5 @@
+D:\Katrine\Work\Тестовое задание\1\C#\ReverseTest\ReverseTest\bin\Debug\ReverseTest.exe
+D:\Katrine\Work\Тестовое задание\1\C#\ReverseTest\ReverseTest\bin\Debug\ReverseTest.pdb
+D:\Katrine\Work\Тестовое задание\1\C#\ReverseTest\ReverseTest\obj\x86\Debug\ReverseTest.csprojResolveAssemblyReference.cache
+D:\Katrine\Work\Тестовое задание\1\C#\ReverseTest\ReverseTest\obj\x86\Debug\ReverseTest.exe
+D:\Katrine\Work\Тестовое задание\1\C#\ReverseTest\ReverseTest\obj\x86\Debug\ReverseTest.pdb
