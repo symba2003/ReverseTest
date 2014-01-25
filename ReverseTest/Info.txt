@@ -1,0 +1,38 @@
+﻿Provide implementation for the functions:
+-- private static void Reverse(byte[] values)
+-- private static void Reverse(long[] values)
+
+Each of these function must reverse bits in the each element of "values" array.
+
+It is important that both these function will execute as quickly as possible. 
+Memory consumption is not a concern (but must be reasonable, so that a regular PC could execute the code).
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+The byte keyword denotes an integral type that stores values as indicated in the following table.
+Range: 0 to 255
+Size: unsigned 8-bit integer
+
+>> Operator
+The right-shift operator (>>) shifts its first operand right by the number of bits specified by its second operand.
+
+If the first operand is an int or uint (32-bit quantity), 
+the shift count is given by the low-order five bits of the second operand (second operand & 0x1f (11111)).
+If the first operand is a long or ulong (64-bit quantity), the shift count
+ is given by the low-order six bits of the second operand (second operand & 0x3f (111111)).
+If the first operand is an int or long, the right-shift is an arithmetic shift 
+(high-order empty bits are set to the sign bit). If the first operand is of type uint or ulong, 
+sthe right-shift is a logical shift (high-order bits are zero-filled).
+
+<< Operator
+The left-shift operator (<<) shifts its first operand left by the number of bits specified by its second operand. The type of the second operand must be an int or a type that has a predefined implicit numeric conversion to int.
+If the first operand is an int or uint (32-bit quantity), the shift count is given by the low-order five bits of the second operand. That is, the actual shift count is 0 to 31 bits.
+If the first operand is a long or ulong (64-bit quantity), the shift count is given by the low-order six bits of the second operand. That is, the actual shift count is 0 to 63 bits.
+Any high-order bits that are not within the range of the type of the first operand after the shift are discarded, and the low-order empty bits are zero-filled. Shift operations never cause overflows.
+
+
+| Operator
+Binary | operators are predefined for the integral types and bool. For integral types, | computes the bitwise OR of its operands. For bool operands, | computes the logical OR of its operands; that is, the result is false if and only if both its operands are false.
+
+& Operator
+The & operator can function as either a unary or a binary operator.
+The unary & operator returns the address of its operand (requires unsafe context).
+Binary & operators are predefined for the integral types and bool. For integral types, & computes the logical bitwise AND of its operands. For bool operands, & computes the logical AND of its operands; that is, the result is true if and only if both its operands are true.

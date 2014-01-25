@@ -23,12 +23,3 @@ http://social.msdn.microsoft.com/Forums/vstudio/en-US/9f52904e-dc12-4235-ad86-b6
 
 http://www.ardendertat.com/2012/01/09/programming-interview-questions/
 http://everything2.com/title/hard+interview+questions 
-
-
-
-rutracker.org
-symba2003    <symba2003@mail.ru>
-IFf2f
-
-
-http://www.codeproject.com/Articles/548406/Dictionary-plus-Locking-versus-ConcurrentDictionar
