@@ -38,22 +38,20 @@ namespace ReverseTest
          * Keep a 256 size array of bytes (byte[256]). For each byte we calculate, we keep its result value in the array, as: 
          * arr[x]=f(x), so next time we get the same byte, we have its calculation in O(1). So our function will run maximum 256 times.
          * 
+         * Another one correct answer:
          * To eek out additional speed, construct the array as a static final by hand. Second thought would be to play with larger
          * elements in the array as the source is 1000bytes wide and converting two bytes at a time would be faster.
          * Other considerations would be to see if using multi-processors can be made part of the solution and split the processing
          * into threads.
          * 
-         * 
+         * Another one correct answer:
          * I think there is only correct answer to this question in a job interview: If this is really performance critical,
          * I can’t answer it without implementing at least the two most obvious solutions (using an LUT (look up table) or 
          * using logical operations+SIMD), and profiling them. Anything else would be guesswork and superstition, todays’s CPUs
          * are to complex to decide something like this in an interview.
          * 
-         * I’m guessing the fastest way is to take 4 or 8 byte chunks and reverse all the bytes simultaneously. Something like this.
-         * reversed =
-         * ((value & (1<<0 | 1<<8 | 1<<16 | 1<<24)) << 7) |
-         * ((value & (1<<1 | 1<<9 | 1<<17 | 1<<25)) << 5) |
          * 
+         * Another one correct answer (TODO: test it): Compuboy
          * first pre-compute all reverses in a byte array simply like this:
          * byte[] reverse = new byte[256];
          * for (int x = 0; x < 256; x++)
@@ -62,7 +60,33 @@ namespace ReverseTest
          * ‘reverse’ can be computed once and will be reused for each image.
          * 
          * 
+         * Another one correct answer (TODO: test it): 
+         * static class Task
+{
+private static byte[] table = new byte[256]; // 256 = 2^8;
+private static byte[] pow2 = new byte[8] { 1, 2, 4, 8, 16, 32, 64, 128 };
+static Task()
+{
+for (int i = 0; i < table.Length; i++)
+{
+// reverse i and save the result in table[i]
+for (int j = 0; j 0) table[i] |= pow2[8 - j - 1];
+}
+}
+}
+public static void ReverseBitmap(byte[,] bitmap)
+{
+for (int i = 0; i < bitmap.GetUpperBound(0) + 1; i++)
+{
+for (int j = 0; j < bitmap.GetUpperBound(1) + 1; j++)
+{
+bitmap[i, j] = table[bitmap[i, j]];
+}
+}
+}
+}
          * 
+      
          * */
         public static void Run() 
         {
@@ -159,6 +183,15 @@ namespace ReverseTest
             return (byte)rev;
         }
 
+        static uint ReverseBits(uint x) {
+            x = ((x >> 16) | (x << 16));
+            x = (((x & 0xff00ff00) >> 8) | ((x & 0x00ff00ff) << 8));
+            x = (((x & 0xf0f0f0f0) >> 4) | ((x & 0x0f0f0f0f) << 4));
+            x = (((x & 0xcccccccc) >> 2) | ((x & 0x33333333) << 2));
+            x = (((x & 0xaaaaaaaa) >> 1) | ((x & 0x55555555) << 1));
+            return x;
+        }
+
         // Reverses bits in a long 
         static long Reverse(long l)
         {
@@ -196,6 +229,13 @@ namespace ReverseTest
             //rev = ((rev & 0xaa) >> 1) | ((rev & 0x55) << 1);
 
             return (long)rev;
+        }
+
+        public static uint InvertBits(uint i)
+        {
+            // Here is how bits sequence can be inverted without using the bitwise NOT operator (~).
+            // We will use XOR operation to invert the bits.
+            return i ^ 0xFFFFFFFF;
         }
 
         static void PrintItems(string messageTitle, byte[] values) 
