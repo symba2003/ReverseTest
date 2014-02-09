@@ -12,6 +12,9 @@ namespace ReverseTest
 
 		static void Main(string[] args)
 		{
+            LongSample.Run();
+            return;
+
             int numItemsToTest = 100000000;
             for (int j = 0; j < 10; j++)
             {
