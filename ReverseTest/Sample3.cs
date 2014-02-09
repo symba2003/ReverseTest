@@ -17,28 +17,33 @@ namespace ReverseTest
      * 
      * Solution: http://www.dev102.com/2008/05/12/a-programming-job-interview-challenge-3/
      * 
-     * CorrectAnswer:
-     * This is a Big “O” problem that screams for a LUT (Look Up Table). Don’t spin on each pixel, create your 256 entry look up table of all possible reversals,
-     * and do a quick pass over the 1000×1000 array by simply indexing into the table with the original value as the lookup.
-     * 
-     * Roberto Orsini wrote a really great implementation of how to parallelise the problem here - http://blog.fogbank.org/ , using threads from the threadPool,
-     * but he didn’t use LUT to reverse the bits. Although this problem is perfectly parallelizable, you can’t rely on the fact that there is more than one CPU 
-     * (unless stated it in the question). All of the others who provided bitwise operations: even if your solution is correct (XOR with 0xFF is wrong for instance)
-     * it is not the most efficient one, you should assume that your code should work on every machine and every processor and you can’t rely on specific 
-     * hardware where a specific operation may be very efficient.
+   
      * 
      * This sample was marked as correct
      * ****/
     class Sample3_FromCompuboy
     {
         // Reverses bits in each byte in the array 
-        private static void Reverse(byte[] values) 
+        public static void Reverse(byte[] values) 
         {
-            // Precompute the value of each reversed byte 
+           // first pre-compute all reverses in a byte array simply like this:
             byte[] reverse = new byte[256];
             for (int x = 0; x < 256; x++)
-                reverse[x] = (byte) (((x & 1) << 7) + ((x & 2) << 5) + ((x & 4) << 3) + ((x & 8) <> 1) + ((x & 32) >> 3) + ((x & 64) >> 5) + ((x & 128) >> 7));
-            // And then we simply iterate the pixels of our image and foreach pixel value ‘x’ we will substitute it with reverse[x].
+                reverse[x] = (byte)(((x & 1) << 7) + ((x & 2) << 5) + ((x & 4) << 3) + ((x & 8) << 1) + ((x & 16) >> 1) + ((x & 32) >> 3) + ((x & 64) >> 5) + ((x & 128) >> 7));
+                // на сайте не совсем корректно отобразилась эта строка (со смайликом)
+                // reverse[x] = (byte) (((x & 1) << 7) + ((x & 2) << 5) + ((x & 4) << 3) + ((x & "8)" <> 1) + ((x & 32) >> 3) + ((x & 64) >> 5) + ((x & 128) >> 7));
+            // но, судя по логике, представим ч = 87654321(порядковые номера бит). Тогда
+                // 1. ((x & 1) << 7) = сдвигаем 1 на 7 бит влево
+                // 2. ((x & 2) << 5) = сдвигаем 2 на 5 бит влево
+                // 3. (x & 4) << 3 = сдвигаем 3 на 3 бита влево
+                // 4. ((x & "8)" <> 1)- пока непонятная операция, см. ниже
+                // 5. (x & 32) >> 3 = сдвигаем 6 на 3 бита вправо
+                // 6. (x & 64) >> 5 = сдвигаем 7 на 5 бит вправо
+                // 7. (x & 128) >> 7 = сдвигаем 8 на 7 бит вправо
+                // После операций 1-3 и 5-7 получается: 123__678
+                // Значит, в п.4 выполняется перемена местами 4 и 5 бита
+                // скорее всего так: ((x & 8) << 1) + ((x & 16) >> 1)
+                // And then we simply iterate the pixels of our image and foreach pixel value ‘x’ we will substitute it with reverse[x].
             // ‘reverse’ can be computed once and will be reused for each image.
              for (int i = 0; i < values.Length; i++) values[i] = reverse[values[i]];
         }

@@ -16,7 +16,7 @@ namespace ReverseTest
      * which will loop through the array again. Regardless, you shouldn't worry about performance until you've profiled your app and identified the performance
      * bottlenecks.
      * ***/
-    class ArrayReverese
+    class ArrayReverse
     {
         public static void Test()
         {

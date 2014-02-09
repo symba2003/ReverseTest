@@ -28,12 +28,22 @@ namespace ReverseTest
          * My solution below uses a slightly faster approach. It is a nice trick, and not very difficult, so I will leave 
          * the details as an exercise to the reader
          * 
-         * Another opinion:
+         * Another correct opinions:
          * I think the best solution for this problem would be the construction of an array to store the inverted bits for each byte. 
          * After you have calculated this array, you can easily look up the solution via its index. in the array.
          * This should be much faster then reversing the order of every bit you encounter by hand.
          * The size of this cache is minimal… we only need to store 256 entries here - Compared to the 1.000.000 swapping opperations 
          * for each picture.
+         * 
+         * CorrectAnswer:
+         * This is a Big “O” problem that screams for a LUT (Look Up Table). Don’t spin on each pixel, create your 256 entry look up table of all possible reversals,
+         * and do a quick pass over the 1000×1000 array by simply indexing into the table with the original value as the lookup.
+         * 
+         * Roberto Orsini wrote a really great implementation of how to parallelise the problem here - http://blog.fogbank.org/ , using threads from the threadPool,
+         * but he didn’t use LUT to reverse the bits. Although this problem is perfectly parallelizable, you can’t rely on the fact that there is more than one CPU 
+         * (unless stated it in the question). All of the others who provided bitwise operations: even if your solution is correct (XOR with 0xFF is wrong for instance)
+         * it is not the most efficient one, you should assume that your code should work on every machine and every processor and you can’t rely on specific 
+         * hardware where a specific operation may be very efficient.
          * 
          * Keep a 256 size array of bytes (byte[256]). For each byte we calculate, we keep its result value in the array, as: 
          * arr[x]=f(x), so next time we get the same byte, we have its calculation in O(1). So our function will run maximum 256 times.
@@ -51,49 +61,27 @@ namespace ReverseTest
          * are to complex to decide something like this in an interview.
          * 
          * 
-         * Another one correct answer (TODO: test it): Compuboy
-         * first pre-compute all reverses in a byte array simply like this:
-         * byte[] reverse = new byte[256];
-         * for (int x = 0; x < 256; x++)
-         * reverse[x] = (byte) (((x & 1) << 7) + ((x & 2) << 5) + ((x & 4) << 3) + ((x & 8) <> 1) + ((x & 32) >> 3) + ((x & 64) >> 5) + ((x & 128) >> 7));
-         * And then we simply iterate the pixels of our image and foreach pixel value ‘x’ we will substitute it with reverse[x].
-         * ‘reverse’ can be computed once and will be reused for each image.
+         * I think a lookup in a prefilled table with already reversed bits is the most fast solution trading less than 1 KB memory for it
+         * and no functions or bitwise operations used. The whole processing becomes bytewise this way.
          * 
+         * There is only 256 possible argument values for reversing function. the fastest solution will be to use precalcutaion.
+         * 1. create lookup array:      byte pre[256];
+         * 2. fill it using any method.
+         * 3. use: byte reverse(byte x){return pre[x];}
          * 
-         * Another one correct answer (TODO: test it): 
-         * static class Task
-{
-private static byte[] table = new byte[256]; // 256 = 2^8;
-private static byte[] pow2 = new byte[8] { 1, 2, 4, 8, 16, 32, 64, 128 };
-static Task()
-{
-for (int i = 0; i < table.Length; i++)
-{
-// reverse i and save the result in table[i]
-for (int j = 0; j 0) table[i] |= pow2[8 - j - 1];
-}
-}
-}
-public static void ReverseBitmap(byte[,] bitmap)
-{
-for (int i = 0; i < bitmap.GetUpperBound(0) + 1; i++)
-{
-for (int j = 0; j < bitmap.GetUpperBound(1) + 1; j++)
-{
-bitmap[i, j] = table[bitmap[i, j]];
-}
-}
-}
-}
+         * From Adam B blog:
+         * Assuming you can afford (быть в состоянии, позволить себе) 256 bytes for a cache, one really fast general-purpose way to implement this
+         * is to create an array with an entry for each possible value of a byte, storing the reversed bits of the byte. For each byte in the image,
+         * you can then look the reversed bits nearly instantly. The runtime of the algorithm is O(n) with a trivial constant multiplier.
+         * This algorithm, by the way, is insanely (безумно) easy to make run in multiple threads and should run extremely fast on a multi-core SIMD processor.
          * 
-      
          * */
         public static void Run() 
         {
+            //TODO: reverse long array
             //long l = 4294967296;
-            long l = -2814299246381726651;
-            Reverse(l);
-            return;
+            //long l = -2814299246381726651;
+            //Reverse(l);
 
 
             int numItemsToTest = 100000000;
@@ -127,7 +115,7 @@ bitmap[i, j] = table[bitmap[i, j]];
         }
 
         // Reverses bits in each byte in the array 
-        private static void Reverse(byte[] values)
+        public static void Reverse(byte[] values)
         {
             // Precompute the value of each reversed byte 
             byte[] reversed = new byte[256];
@@ -163,7 +151,7 @@ bitmap[i, j] = table[bitmap[i, j]];
             // 2. b & 0xf                       = 00004321
             // 3. (b & 0xf) << 4                = 43210000
             // 4. (b >> 4) | ((b & 0xf) << 4)   = 43218765
-            int rev = (b >> 32) | ((b & 0xf) << 32);
+            int rev = (b >> 4) | ((b & 0xf) << 4); 
 
             // 5. rev & 0xcc                    = 43008700
             // 6. (rev & 0xcc) >> 2             = 00430087

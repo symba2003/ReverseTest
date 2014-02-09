@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -11,10 +12,52 @@ namespace ReverseTest
 
 		static void Main(string[] args)
 		{
+            int numItemsToTest = 100000000;
+            for (int j = 0; j < 10; j++)
+            {
+                // init array
+                byte[] values = new byte[numItemsToTest];
+
+                // prefill array with the test data
+                Random rnd = new Random();
+                rnd.NextBytes(values);
+
+                // start timer
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                Sample3_FromCompuboy.Reverse(values);
+                timer.Stop();
+                Console.WriteLine(String.Format("Sample3 Reverses byte array. Elapsed time: {0}", timer.Elapsed));
+                Console.WriteLine();
+
+                timer.Reset();
+                timer.Start();
+                //Sample1 - немного более быстрый (за все 10 тестов - ни разу не "отстал" от Sample3)
+                Sample1.Reverse(values);
+                //INFO: Sample3 двигает каждый бит в отдельности
+                // итого получается:
+                // 8 операций сдвига, 8 операций & (logical bitwise AND)
+                // и результат суммируется: 7 сложений
+
+                // Sample1: двигает биты группами (по 4 бита, по 2 бита и по 1 биту)
+                // итого получается:
+                // 6 операций сдвига, 5 операций  & (logical bitwise AND), 3 операции | ( bitwise OR)
+                timer.Stop();
+                Console.WriteLine(String.Format("Sample1 Reverses byte array. Elapsed time: {0}", timer.Elapsed));
+                Console.WriteLine();
+            }
+            
+            
+            
             //TestLeftShifOperator();
 
             //Igor Ostrovsky sample
-            Sample1.Run();
+            //Sample1.Run();
+
+            // Irinev Sample
+            //byte[,] bitmap = new byte[10,10];
+            //Task.ReverseBitmap(bitmap);
+
 
             Console.ReadLine();
 		}
